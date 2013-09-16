@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<root>
+    <attribute-value attribute="sample attribure">
+        <value>sample value</value>
+    </attribute-value>
+    <text>Sample text</text>
+    <number-list>
+        <number>1</number>
+        <number>2</number>
+        <number>3</number>
+    </number-list>
+</root>

@@ -1,0 +1,29 @@
+{
+    "name": "PAXB",
+    "type": "library",
+    "description": "PAXB - PHP Annotation Xml Binding, basic implementation of annotation driven xml binding",
+    "keywords": ["xml", "binding", "marshalling"],
+    "license": "MIT",
+    "version" : "1.0.0-alpha",
+    "require": {
+        "doctrine/common": "2.4.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {"": "lib/"}
+    },
+    "config": {
+        "vendor-dir": "vendor/",
+        "bin-dir": "bin"
+    },
+    "minimum-stability" : "dev",
+    "authors": [
+        {
+            "name": "Tomasz Ziółkowski",
+            "email": "tomasz.ziolkowski@g.pl",
+            "role": "Developer"
+        }
+    ]
+}
