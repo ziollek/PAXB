@@ -1,7 +1,7 @@
 {
-    "name": "PAXB",
+    "name": "publib/PAXB",
     "type": "library",
-    "description": "PAXB - PHP Annotation Xml Binding, basic implementation of annotation driven xml binding",
+    "description": "Public library PAXB - PHP Annotation Xml Binding, basic implementation of annotation driven xml binding",
     "keywords": ["xml", "binding", "marshalling"],
     "license": "MIT",
     "version" : "1.0.0-alpha",
