@@ -131,6 +131,41 @@ EOD;
     }
 
     /**
+     * @test
+     * @covers ::marshall
+     */
+    public function shouldOmitEmptyProperties() {
+
+        $expectedString =  <<<EOD
+<?xml version="1.0"?>
+<complex-entity><primitives/></complex-entity>
+
+EOD;
+        $entity = new ComplexEntity();
+        $entity->setPrimitives(array());
+
+        $classMetadata = new ClassMetadata('\PAXB\Tests\Mocks\ComplexEntity');
+        $classMetadata->setName('complex-entity');
+        $classMetadata->addElement('primitives', new Element('primitive', Element::FIELD_SOURCE, ClassMetadata::DEFINED_TYPE, 'PAXB\Tests\Mocks\PrimitiveEntity', 'primitives'));
+
+        $primitiveClassMetadata = new ClassMetadata('\PAXB\Tests\Mocks\PrimitiveEntity');
+        $primitiveClassMetadata->setName('primitive-entity');
+        $primitiveClassMetadata->addElement('stringField', new Element('stringField', ClassMetadata::RUNTIME_TYPE));
+
+        $classMetadataFactory = $this->getClassMetadataFactoryMock(
+            array(
+                'PAXB\Tests\Mocks\ComplexEntity' => $classMetadata,
+                'PAXB\Tests\Mocks\PrimitiveEntity' => $primitiveClassMetadata,
+            )
+        );
+
+        $marshaller = new DOMDocumentMarshaller($classMetadataFactory);
+
+        $this->assertSame($expectedString, $marshaller->marshall($entity));
+    }
+
+
+    /**
      * @param array $classMetadataInstances
      *
      * @return ClassMetadataFactory

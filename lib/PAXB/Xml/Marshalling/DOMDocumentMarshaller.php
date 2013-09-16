@@ -175,7 +175,7 @@ class DOMDocumentMarshaller {
         if (is_array($elementValue)) {
             $elementValue = reset($elementValue);
         }
-        if ($elementMetadata->getType() == ClassMetadata::DEFINED_TYPE) {
+        if ($elementMetadata->getType() == ClassMetadata::DEFINED_TYPE && !empty($elementValue)) {
             if (!is_object($elementValue) || get_class($elementValue) !== $elementMetadata->getTypeValue()) {
                 throw new MarshallingException(
                     'Cannot marshall field ' . $elementMetadata->getName(

@@ -63,7 +63,7 @@ class Setup {
     /**
      * @return ClassMetadataFactory
      */
-    private static function getClassMetadataFactory()
+    public static function getClassMetadataFactory()
     {
         if (self::$classMetadataFactory == null) {
             $reader = new SimpleAnnotationReader();
