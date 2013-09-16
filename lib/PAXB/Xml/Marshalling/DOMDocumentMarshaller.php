@@ -221,10 +221,12 @@ class DOMDocumentMarshaller {
         if (is_object($elementValue)) {
             $this->marshallObject($document, $elementValue, $element, $elementMetadata->getName());
         } else {
-            $nestedElement = $document->createElement($elementMetadata->getName());
-            $textElement   = $document->createTextNode($elementValue);
-            $nestedElement->appendChild($textElement);
-            $element->appendChild($nestedElement);
+            if ($elementMetadata->getType() == ClassMetadata::RUNTIME_TYPE) {
+                $nestedElement = $document->createElement($elementMetadata->getName());
+                $textElement   = $document->createTextNode($elementValue);
+                $nestedElement->appendChild($textElement);
+                $element->appendChild($nestedElement);
+            }
         }
     }
 
