@@ -95,6 +95,38 @@ EOD;
      * @test
      * @covers ::marshall
      */
+    public function shouldGenerateProperXmlUsingProvidedClassMetadataForAttributeEntityWithNestedCollection() {
+
+        $expectedString =  <<<EOD
+<?xml version="1.0"?>
+<attribute-entity attr="SampleAttribute"><string-field>SomeValue1</string-field><string-field>SomeValue2</string-field>SampleRootValue</attribute-entity>
+
+EOD;
+
+        $entity = new AttributeEntity();
+        $entity->setStringField(new \ArrayIterator(array('SomeValue1', 'SomeValue2')));
+        $entity->setAttributeField('SampleAttribute');
+        $entity->setValueField('SampleRootValue');
+
+        $classMetadata = new ClassMetadata('\PAXB\Tests\Mocks\AttributeEntity');
+        $classMetadata->setName('attribute-entity');
+        $classMetadata->addAttributes('attributeField', new Attribute('attr', Attribute::FIELD_SOURCE));
+        $classMetadata->addElement('stringField', new Element('string-field', Element::FIELD_SOURCE));
+        $classMetadata->setValueElement('valueField');
+
+        $classMetadataFactory = $this->getClassMetadataFactoryMock(
+            array('PAXB\Tests\Mocks\AttributeEntity' => $classMetadata)
+        );
+
+        $marshaller = new DOMDocumentMarshaller($classMetadataFactory);
+
+        $this->assertSame($expectedString, $marshaller->marshall($entity));
+    }
+
+    /**
+     * @test
+     * @covers ::marshall
+     */
     public function shouldGenerateProperXmlUsingProvidedClassMetadataForComplexEntity() {
 
         $expectedString =  <<<EOD

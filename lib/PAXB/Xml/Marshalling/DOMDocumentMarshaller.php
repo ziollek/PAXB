@@ -172,14 +172,19 @@ class DOMDocumentMarshaller {
      */
     private function checkTypeHinting(Element $elementMetadata, $elementValue)
     {
-        if (is_array($elementValue)) {
-            $elementValue = reset($elementValue);
+        if ($this->isTraversable($elementValue)) {
+            $nestedValue = null;
+            foreach ($elementValue as $nestedValue) {
+                break;
+            }
+            $elementValue = $nestedValue;
+
         }
         if ($elementMetadata->getType() == ClassMetadata::DEFINED_TYPE && !empty($elementValue)) {
             if (!is_object($elementValue) || get_class($elementValue) !== $elementMetadata->getTypeValue()) {
                 throw new MarshallingException(
                     'Cannot marshall field ' . $elementMetadata->getName(
-                    ) . ' as type ' . $elementMetadata->getTypeValue()
+                    ) . ' as type ' . $elementMetadata->getTypeValue(). ' founded type is: '.get_class($elementValue)
                 );
             }
         }
@@ -201,7 +206,7 @@ class DOMDocumentMarshaller {
             $baseElement = $nestedElement;
         }
 
-        if (is_array($elementValue)) {
+        if ($this->isTraversable($elementValue)) {
             foreach ($elementValue as $singleElementValue) {
                 $this->createSubElement($document, $singleElementValue, $elementMetadata, $baseElement);
             }
@@ -228,6 +233,18 @@ class DOMDocumentMarshaller {
                 $element->appendChild($nestedElement);
             }
         }
+    }
+
+    /**
+     * @param mixed $elementValue
+     *
+     * @return bool
+     */
+    private function isTraversable($elementValue)
+    {
+        return is_array($elementValue)
+            || $elementValue instanceof \Iterator
+            || $elementValue instanceof \IteratorAggregate;
     }
 
 }
