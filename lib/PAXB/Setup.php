@@ -84,14 +84,7 @@ class Setup {
      */
     private static function getCache()
     {
-        if (extension_loaded('apc')) {
-            $cache = new \Doctrine\Common\Cache\ApcCache();
-        } elseif (extension_loaded('xcache')) {
-            $cache = new \Doctrine\Common\Cache\XcacheCache();
-        } else {
-            $cache = new ArrayCache();
-        }
-        return $cache;
+        return new ArrayCache();
     }
 
     /**
