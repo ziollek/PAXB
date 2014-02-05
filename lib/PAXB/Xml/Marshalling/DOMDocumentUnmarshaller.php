@@ -124,7 +124,6 @@ class DOMDocumentUnmarshaller implements Unmarshaller {
     {
         $valueElement = $classMetadata->getValueElement();
         if (!empty($valueElement)) {
-            $childNodes = $this->filterChildNodes($node, $valueElement);
             $fieldValue = '';
             foreach ($node->childNodes as $childNode) {
                 if ($childNode instanceof \DOMText) {
@@ -247,7 +246,7 @@ class DOMDocumentUnmarshaller implements Unmarshaller {
         $fieldName
     ) {
         if (count($childNodes) > 0) {
-            if (count($childNodes) > 1) {
+            if (count($childNodes) > 1 || $element->getPhpCollection()) {
                 $fieldValue = array();
                 foreach ($childNodes as $child) {
                     $fieldValue[] = $this->getNodeElementValue($element, $child);

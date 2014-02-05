@@ -9,4 +9,7 @@
         <number>2</number>
         <number>3</number>
     </number-list>
+    <one-element-list>
+        <single>1</single>
+    </one-element-list>
 </root>

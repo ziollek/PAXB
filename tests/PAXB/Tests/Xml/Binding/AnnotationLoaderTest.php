@@ -7,6 +7,7 @@ use PAXB\Xml\Binding\Annotations\XmlAnnotation;
 use PAXB\Xml\Binding\Annotations\XmlAttribute;
 use PAXB\Xml\Binding\Annotations\XmlElement;
 use PAXB\Xml\Binding\Annotations\XmlElementWrapper;
+use PAXB\Xml\Binding\Annotations\XmlPhpCollection;
 use PAXB\Xml\Binding\Annotations\XmlTransient;
 use PAXB\Xml\Binding\Annotations\XmlValue;
 use PAXB\Xml\Binding\Metadata\ClassMetadata;
@@ -71,6 +72,32 @@ class AnnotationLoaderTest extends \PHPUnit_Framework_TestCase {
         );
 
         $metadata = new ClassMetadata('\PAXB\Tests\Mocks\PrimitiveEntity');
+
+        $annotationLoader = new AnnotationLoader($reader);
+        $annotationLoader->loadClassMetadata($metadata);
+
+        $this->assertContains($expectedElement, $metadata->getElements(), '', false, false);
+    }
+
+    /**
+     * @test
+     * @covers ::loadClassMetadata
+     */
+    public function shouldSetPhpCollectionFromFieldAnnotation() {
+
+        $expectedElement = new Element(
+            'primitives', Element::FIELD_SOURCE, ClassMetadata::DEFINED_TYPE, '\PAXB\Tests\Mocks\PrimitiveEntity', '', true
+        );
+
+        $reader = $this->getReaderMock(
+            array(),
+            array(
+                'primitives-2' => new XmlPhpCollection(array()),
+                'primitives-1' => new XmlElement(array('name' => 'primitives', 'type' => '\PAXB\Tests\Mocks\PrimitiveEntity'))
+            )
+        );
+
+        $metadata = new ClassMetadata('\PAXB\Tests\Mocks\PhpCollectionEntity');
 
         $annotationLoader = new AnnotationLoader($reader);
         $annotationLoader->loadClassMetadata($metadata);
@@ -212,6 +239,9 @@ class AnnotationLoaderTest extends \PHPUnit_Framework_TestCase {
             array(new XmlElement(array()), new XmlValue(array())),
             array(new XmlValue(array()), new XmlAttribute(array())),
             array(new XmlElement(array()), new XmlTransient(array())),
+            array(new XmlValue(array()), new XmlPhpCollection(array())),
+            array(new XmlAttribute(array()), new XmlPhpCollection(array())),
+            array(new XmlTransient(array()), new XmlPhpCollection(array())),
         );
     }
 
@@ -244,7 +274,7 @@ class AnnotationLoaderTest extends \PHPUnit_Framework_TestCase {
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    public function getReaderMock($classAnnotations = array(), $propertyAnnotations = array())
+    private function getReaderMock($classAnnotations = array(), $propertyAnnotations = array())
     {
         $reader = $this->getMockBuilder('\Doctrine\Common\Annotations\Reader')
             ->disableOriginalConstructor()

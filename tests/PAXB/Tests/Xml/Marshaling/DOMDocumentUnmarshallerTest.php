@@ -7,6 +7,7 @@ namespace PAXB\Tests\Xml\Marshalling;
 use PAXB\Tests\Mocks\AttributeEntity;
 use PAXB\Tests\Mocks\ClassMetadataFactoryMock;
 use PAXB\Tests\Mocks\ComplexEntity;
+use PAXB\Tests\Mocks\PhpCollectionEntity;
 use PAXB\Tests\Mocks\PrimitiveEntity;
 use PAXB\Xml\Binding\Metadata\ClassMetadata;
 use PAXB\Xml\Binding\Metadata\ClassMetadataFactory;
@@ -127,6 +128,42 @@ EOD;
         $classMetadata = new ClassMetadata('\PAXB\Tests\Mocks\ComplexEntity');
         $classMetadata->setName('complex-entity');
         $classMetadata->addElement('primitives', new Element('primitive', Element::FIELD_SOURCE, ClassMetadata::DEFINED_TYPE, 'PAXB\Tests\Mocks\PrimitiveEntity', 'primitives'));
+
+        $primitiveClassMetadata = new ClassMetadata('\PAXB\Tests\Mocks\PrimitiveEntity');
+        $primitiveClassMetadata->setName('primitive-entity');
+        $primitiveClassMetadata->addElement('stringField', new Element('stringField', ClassMetadata::RUNTIME_TYPE));
+
+        $classMetadataFactory = $this->getClassMetadataFactoryMock(
+            array(
+                'PAXB\Tests\Mocks\ComplexEntity' => $classMetadata,
+                'PAXB\Tests\Mocks\PrimitiveEntity' => $primitiveClassMetadata,
+            )
+        );
+
+        $marshaller = new DOMDocumentUnmarshaller($classMetadataFactory);
+
+        $this->assertEquals($expectedEntity, $marshaller->unmarshall($inputXml, 'PAXB\Tests\Mocks\ComplexEntity'));
+    }
+
+    /**
+     * @test
+     * @covers ::unmarshall
+     */
+    public function shouldGenerateProperXmlUsingProvidedClassMetadataForPhpCollectionEntity() {
+        $primitive = new PrimitiveEntity();
+        $primitive->setStringField('First');
+        $expectedEntity = new PhpCollectionEntity();
+        $expectedEntity->setPrimitives(array($primitive));
+
+        $inputXml =  <<<EOD
+<?xml version="1.0"?>
+<php-collection-entity><primitives><primitive><stringField>First</stringField></primitive></primitives></php-collection-entity>
+
+EOD;
+
+        $classMetadata = new ClassMetadata('\PAXB\Tests\Mocks\PhpCollectionEntity');
+        $classMetadata->setName('php-collection-entity');
+        $classMetadata->addElement('primitives', new Element('primitive', Element::FIELD_SOURCE, ClassMetadata::DEFINED_TYPE, 'PAXB\Tests\Mocks\PrimitiveEntity', 'primitives', true));
 
         $primitiveClassMetadata = new ClassMetadata('\PAXB\Tests\Mocks\PrimitiveEntity');
         $primitiveClassMetadata->setName('primitive-entity');

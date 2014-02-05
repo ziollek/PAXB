@@ -17,12 +17,19 @@ class SampleEntity {
      */
     private $number = array();
 
+    /**
+     * @XmlPhpCollection
+     * @XmlElementWrapper(name="one-element-list")
+     */
+    private $single = array();
 
-    public function __construct($number = array(), $nestedEntity = null, $text = "")
+
+    public function __construct($number = array(), $nestedEntity = null, $text = "", $single = array())
     {
         $this->number = $number;
         $this->nestedEntity = $nestedEntity;
         $this->text = $text;
+        $this->single = $single;
     }
 
     /**
@@ -49,5 +56,12 @@ class SampleEntity {
         return $this->text;
     }
 
+    /**
+     * @return array
+     */
+    public function getSingle()
+    {
+        return $this->single;
+    }
 
 }

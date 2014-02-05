@@ -21,13 +21,19 @@ class Element extends Base {
      */
     private $wrapperName;
 
-    public function __construct($name, $source, $type = ClassMetadata::RUNTIME_TYPE, $typeValue = '', $wrapperName = null)
+    /**
+     * @var bool
+     */
+    private $phpCollection = false;
+
+    public function __construct($name, $source, $type = ClassMetadata::RUNTIME_TYPE, $typeValue = '', $wrapperName = null, $phpCollection = false)
     {
         $this->name = $name;
         $this->type = $type;
         $this->typeValue = $typeValue;
         $this->source = $source;
         $this->wrapperName = $wrapperName;
+        $this->phpCollection = $phpCollection;
     }
 
     /**
@@ -71,8 +77,20 @@ class Element extends Base {
         $this->typeValue = $typeValue;
     }
 
+    /**
+     * @param boolean $phpCollection
+     */
+    public function setPhpCollection($phpCollection)
+    {
+        $this->phpCollection = $phpCollection;
+    }
 
-
-
+    /**
+     * @return boolean
+     */
+    public function getPhpCollection()
+    {
+        return $this->phpCollection;
+    }
 
 }

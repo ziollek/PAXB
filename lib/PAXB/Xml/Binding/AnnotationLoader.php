@@ -114,6 +114,14 @@ class AnnotationLoader {
                             $classMetadata->addElement($property->getName(), $element);
                             break;
 
+                        case 'PAXB\Xml\Binding\Annotations\XmlPhpCollection':
+                            $state   = $this->changeMode($state, self::MODE_ELEMENT);
+
+                            $element = $this->getCurrentElement($element, $property);
+                            $element->setPhpCollection(true);
+                            $classMetadata->addElement($property->getName(), $element);
+                            break;
+
                         case 'PAXB\Xml\Binding\Annotations\XmlTransient':
                             $state   = $this->changeMode($state, self::MODE_TRANSIENT);
                             break;
